@@ -57,6 +57,6 @@ void StateMachine::execute() {
         }
         ss  << (*it);
     }
-    Logger::get().log(ss.str(), _time);
+    Logger::get()->log(ss.str(), _time);
     _commands.clear();
 }

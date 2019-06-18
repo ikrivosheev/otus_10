@@ -27,7 +27,8 @@ class Queue {
             _cond.notify_one();
         }
 
-        bool empty() const {
+        bool empty() {
+            std::unique_lock<std::mutex> u_lock(_mutex);
             return _queue.empty();
         }
 

@@ -12,9 +12,9 @@ class Record {
         Record(const std::string&, const std::time_t&);
         Record(const Record&) = default;
 
-        const std::string& str() const;
+        const std::string str() const;
         const std::time_t& time() const;
-        ~Record() {std::cout << "Destroy" << std::endl;};
+        ~Record() = default; 
 
     private:
         std::string _str;

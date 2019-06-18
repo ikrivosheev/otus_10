@@ -36,12 +36,13 @@ void ThreadFileHandler::worker() {
             ss << _base_dir << _prefix << record->time() << "-" << std::this_thread::get_id() << ".log";
             stream.open(ss.str());
         }
-        stream << record->str() << ThreadFileHandler::TERMINATOR;
+        stream << record->str().data() << ThreadFileHandler::TERMINATOR;
     }
-    while (_queue.empty()) {
+    while (!_queue.empty()) {
         auto record = _queue.pop();
         stream << record->str() << ThreadFileHandler::TERMINATOR;
     }
+    std::cout << "End!!" << std::endl;
     stream.flush();
     stream.close();
 }

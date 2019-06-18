@@ -1,11 +1,23 @@
 #include <iostream>
 #include <memory>
+#include <csignal>
+
 #include "logger.h"
 #include "thread_console_handler.h"
 #include "thread_file_handler.h"
 #include "state_machine.h"
 
+
+void signal_handler(int signal) {
+    delete Logger::get();
+    std::exit(0);
+}
+
+
 int main(int argc, char** argv) {
+    std::signal(SIGINT, signal_handler);
+    std::signal(SIGTERM, signal_handler);
+
     if (argc < 2) {
         std::cerr << "Usage bulk <bulk size>" << std::endl;
         return 1;
@@ -19,8 +31,8 @@ int main(int argc, char** argv) {
         std::cerr << e.what() << std::endl;
         return 1;
     }
-    Logger::get().add_handler<ThreadConsoleHandler>();
-    Logger::get().add_handler<ThreadFileHandler>("/tmp/", "bulk", 2);
+    Logger::get()->add_handler<ThreadConsoleHandler>();
+    Logger::get()->add_handler<ThreadFileHandler>("/tmp/", "bulk", 2);
     StateMachine state(bulk_size);
     while (true) {
         std::string tmp;

@@ -14,17 +14,17 @@ class Logger {
         Logger& add_handler(Args&&... args) {
             static_assert(std::is_base_of<IHandler, T>::value, "Handler must be extend IHandler");
             // std::unique_ptr<IHandler> handler = std::make_unique<T>(std::forward<Args>(args)...);
-            _handlers.push_back(std::make_unique<T>(std::forward<Args>(args)...));
+            _handlers.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
             return (*this);
         }
         void log(const Record&);
         void log(const std::string&);
         void log(const std::string&, const std::time_t&);
 
-        ~Logger() = default;
+        ~Logger() { std::cout<<"DELETE!" << std::endl;};
 
-        static Logger& get() {
-            static Logger logger;
+        static Logger* get() {
+            static Logger* logger = new Logger();
             return logger;
         }
 
