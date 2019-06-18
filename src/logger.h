@@ -13,7 +13,6 @@ class Logger {
         template<typename T, typename... Args>
         Logger& add_handler(Args&&... args) {
             static_assert(std::is_base_of<IHandler, T>::value, "Handler must be extend IHandler");
-            // std::unique_ptr<IHandler> handler = std::make_unique<T>(std::forward<Args>(args)...);
             _handlers.emplace_back(std::make_unique<T>(std::forward<Args>(args)...));
             return (*this);
         }
@@ -21,7 +20,7 @@ class Logger {
         void log(const std::string&);
         void log(const std::string&, const std::time_t&);
 
-        ~Logger() { std::cout<<"DELETE!" << std::endl;};
+        ~Logger() = default; 
 
         static Logger* get() {
             static Logger* logger = new Logger();

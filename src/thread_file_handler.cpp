@@ -38,6 +38,7 @@ void ThreadFileHandler::worker() {
         }
         stream << record->str().data() << ThreadFileHandler::TERMINATOR;
     }
+    std::cout << "END!!!" << std::endl;
     while (!_queue.empty()) {
         auto record = _queue.pop();
         stream << record->str() << ThreadFileHandler::TERMINATOR;
@@ -48,6 +49,7 @@ void ThreadFileHandler::worker() {
 }
 
 ThreadFileHandler::~ThreadFileHandler() {
+    std::cout << "Destroy" << std::endl;
     shutdown = true;
     for (auto& thread: _threads) {
         thread.join();

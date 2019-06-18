@@ -11,6 +11,7 @@ class IHandler {
         static const char TERMINATOR = '\n';
         virtual void flush() = 0;
         virtual void emit(std::shared_ptr<Record>) = 0;
+        virtual ~IHandler() {};
 };
 
 #endif // HANDLER_H
