@@ -7,6 +7,7 @@ ThreadConsoleHandler::ThreadConsoleHandler() {
 
 ThreadConsoleHandler::~ThreadConsoleHandler() {
     shutdown = true;
+    _queue.stop();
     _thread.join();
 }
 
@@ -24,12 +25,15 @@ void ThreadConsoleHandler::emit(std::shared_ptr<Record> record) {
 void ThreadConsoleHandler::worker() {
    while (!shutdown) {
        auto record = _queue.pop();
+       if (record == nullptr) {
+            continue;
+       }
        {
            std::unique_lock<std::mutex> u_lock(_mutex);
            std::cout << record->str() << ThreadConsoleHandler::TERMINATOR;
        }
    }
-   while (_queue.empty()) {
+   while (!_queue.empty()) {
        auto record = _queue.pop();
        {
            std::unique_lock<std::mutex> u_lock(_mutex);

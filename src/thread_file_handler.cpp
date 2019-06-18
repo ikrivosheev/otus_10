@@ -31,6 +31,9 @@ void ThreadFileHandler::worker() {
     
     while (!shutdown) {
         auto record = _queue.pop();
+        if (record == nullptr) {
+            continue;
+        }
         if (!stream.is_open()) {
             std::stringstream ss;
             ss << _base_dir << _prefix << record->time() << "-" << std::this_thread::get_id() << ".log";
@@ -38,19 +41,17 @@ void ThreadFileHandler::worker() {
         }
         stream << record->str().data() << ThreadFileHandler::TERMINATOR;
     }
-    std::cout << "END!!!" << std::endl;
     while (!_queue.empty()) {
         auto record = _queue.pop();
         stream << record->str() << ThreadFileHandler::TERMINATOR;
     }
-    std::cout << "End!!" << std::endl;
     stream.flush();
     stream.close();
 }
 
 ThreadFileHandler::~ThreadFileHandler() {
-    std::cout << "Destroy" << std::endl;
     shutdown = true;
+    _queue.stop();
     for (auto& thread: _threads) {
         thread.join();
     }

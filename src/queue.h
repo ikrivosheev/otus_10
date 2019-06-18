@@ -11,8 +11,11 @@ class Queue {
     public:
         T pop() {
             std::unique_lock<std::mutex> u_lock(_mutex);
-            while (_queue.empty()) {
+            while (!_shutdown && _queue.empty()) {
                 _cond.wait(u_lock);
+            }
+            if (_shutdown) {
+                return nullptr;
             }
             auto item = _queue.front();
             _queue.pop();
@@ -32,7 +35,13 @@ class Queue {
             return _queue.empty();
         }
 
+        void stop() {
+            _shutdown = true;
+            _cond.notify_all();
+        }
+
     private:
+        bool _shutdown = false;
         std::queue<T> _queue;
         std::mutex _mutex;
         std::condition_variable _cond;
