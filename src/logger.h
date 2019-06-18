@@ -32,6 +32,7 @@ class Logger {
         Logger() {};
         Logger(const Logger&);
         Logger& operator=(Logger&);
+        void log(std::shared_ptr<Record>);
 
         std::vector<std::unique_ptr<IHandler>> _handlers;
 };

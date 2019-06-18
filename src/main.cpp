@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
 #include "logger.h"
-#include "console_handler.h"
-#include "file_handler.h"
+#include "thread_console_handler.h"
+#include "thread_file_handler.h"
 #include "state_machine.h"
 
 int main(int argc, char** argv) {
@@ -19,8 +19,8 @@ int main(int argc, char** argv) {
         std::cerr << e.what() << std::endl;
         return 1;
     }
-    Logger::get().add_handler<ConsoleHandler>();
-    Logger::get().add_handler<FileHandler>("/tmp/", "bulk");
+    Logger::get().add_handler<ThreadConsoleHandler>();
+    Logger::get().add_handler<ThreadFileHandler>("/tmp/", "bulk", 2);
     StateMachine state(bulk_size);
     while (true) {
         std::string tmp;

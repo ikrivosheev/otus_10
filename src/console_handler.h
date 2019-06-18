@@ -9,7 +9,7 @@
 class ConsoleHandler: public IHandler {
     public:
         void flush() override;
-        void emit(const Record&) override;
+        void emit(std::shared_ptr<Record>) override;
         ~ConsoleHandler();
 };
 

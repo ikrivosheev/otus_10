@@ -1,6 +1,7 @@
 #ifndef RECORD_H
 #define RECORD_H
 
+#include <iostream>
 #include <string>
 #include <chrono>
 #include <ctime>
@@ -13,7 +14,7 @@ class Record {
 
         const std::string& str() const;
         const std::time_t& time() const;
-        ~Record() = default;
+        ~Record() {std::cout << "Destroy" << std::endl;};
 
     private:
         std::string _str;

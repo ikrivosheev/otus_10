@@ -16,14 +16,14 @@ void FileHandler::flush() {
     _stream.flush();
 }
 
-void FileHandler::emit(const Record& record) {
+void FileHandler::emit(std::shared_ptr<Record> record) {
     if (!_stream.is_open()) {
         std::stringstream ss;
-        ss << _base_dir << _prefix << record.time() << ".log";
+        ss << _base_dir << _prefix << record->time() << ".log";
         _stream.open(ss.str());
     }
     
-    _stream << record.str() << FileHandler::TERMINATOR;
+    _stream << record->str() << FileHandler::TERMINATOR;
 }
 
 FileHandler::~FileHandler() {

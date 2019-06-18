@@ -5,8 +5,8 @@ void ConsoleHandler::flush() {
     std::cout.flush();
 }
 
-void ConsoleHandler::emit(const Record& record) {
-    std::cout << record.str() << ConsoleHandler::TERMINATOR;
+void ConsoleHandler::emit(std::shared_ptr<Record> record) {
+    std::cout << record->str() << ConsoleHandler::TERMINATOR;
 }
 
 ConsoleHandler::~ConsoleHandler() {

@@ -11,7 +11,7 @@ class FileHandler: public IHandler {
         FileHandler(const std::string&);
         FileHandler(const std::string&, const std::string&);
         void flush() override;
-        void emit(const Record&) override;
+        void emit(std::shared_ptr<Record>) override;
         ~FileHandler();
 
     private:
