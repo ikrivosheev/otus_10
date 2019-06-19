@@ -6,12 +6,20 @@
 #include <chrono>
 #include <ctime>
 
+
+enum class RecordType {
+    COMMAND,
+    BLOCK
+};
+
+
 class Record {
     public:
-        Record(const std::string&);
-        Record(const std::string&, const std::time_t&);
+        Record(RecordType, const std::string&);
+        Record(RecordType, const std::string&, const std::time_t&);
         Record(const Record&) = default;
-
+        
+        RecordType type() const;
         const std::string str() const;
         const std::time_t& time() const;
         ~Record() = default; 
@@ -19,6 +27,7 @@ class Record {
     private:
         std::string _str;
         std::time_t _time;
+        RecordType _type;
 };
 
 #endif // RECORD_H

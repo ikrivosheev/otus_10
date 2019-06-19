@@ -7,12 +7,12 @@ void Logger::log(std::shared_ptr<Record> record) {
     }
 }
 
-void Logger::log(const std::string& str) {
-    std::shared_ptr<Record> record = std::make_shared<Record>(str);
+void Logger::log(RecordType type, const std::string& str) {
+    std::shared_ptr<Record> record = std::make_shared<Record>(type, str);
     log(record);
 }
 
-void Logger::log(const std::string& str, const std::time_t& time) {
-    std::shared_ptr<Record> record = std::make_shared<Record>(str, time);
+void Logger::log(RecordType type, const std::string& str, const std::time_t& time) {
+    std::shared_ptr<Record> record = std::make_shared<Record>(type, str, time);
     log(record);
 }

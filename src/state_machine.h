@@ -5,6 +5,8 @@
 #include <vector>
 #include <memory>
 #include <ctime>
+#include <sstream>
+#include "record.h"
 #include "logger.h"
 
 
@@ -22,7 +24,7 @@ class StateMachine {
         
         STATE current_state();
         void push_command(const std::string& command);
-        void execute();
+        void execute(RecordType);
     
     private:
         

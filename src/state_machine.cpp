@@ -1,4 +1,3 @@
-#include <sstream>
 #include "state_machine.h"
 
 
@@ -15,7 +14,7 @@ void StateMachine::push_command(const std::string& command) {
         case STATE::COMMAND:
             if (command == "{") {
                 _stack.push('{');
-                execute();
+                execute(RecordType::COMMAND);
                 _cstate = STATE::BLOCK;
             }
             else {
@@ -24,7 +23,7 @@ void StateMachine::push_command(const std::string& command) {
                     time(&_time);
                 }
                 if (_commands.size() == _bulk_size) {
-                    execute();
+                    execute(RecordType::COMMAND);
                 }
             }
             break;
@@ -36,8 +35,8 @@ void StateMachine::push_command(const std::string& command) {
             else if (command == "}") {
                 _stack.pop();
                 if (_stack.empty()) {
+                    execute(RecordType::BLOCK);
                     _cstate = STATE::COMMAND;
-                    execute();
                 }
             }
             else {
@@ -47,7 +46,7 @@ void StateMachine::push_command(const std::string& command) {
     }
 }
 
-void StateMachine::execute() {
+void StateMachine::execute(RecordType type) {
     if (!_commands.size()) return;
     std::stringstream ss;
     ss << "bulk: ";
@@ -57,6 +56,6 @@ void StateMachine::execute() {
         }
         ss  << (*it);
     }
-    Logger::get()->log(ss.str(), _time);
+    Logger::get()->log(type, ss.str(), _time);
     _commands.clear();
 }

@@ -17,8 +17,8 @@ class Logger {
             return (*this);
         }
         void log(const Record&);
-        void log(const std::string&);
-        void log(const std::string&, const std::time_t&);
+        void log(RecordType, const std::string&);
+        void log(RecordType, const std::string&, const std::time_t&);
 
         ~Logger() = default; 
 
