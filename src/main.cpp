@@ -8,16 +8,8 @@
 #include "state_machine.h"
 
 
-void signal_handler(int signal) {
-    delete Logger::get();
-    std::exit(0);
-}
-
 
 int main(int argc, char** argv) {
-    std::signal(SIGINT, signal_handler);
-    std::signal(SIGTERM, signal_handler);
-
     if (argc < 2) {
         std::cerr << "Usage bulk <bulk size>" << std::endl;
         return 1;
@@ -34,10 +26,14 @@ int main(int argc, char** argv) {
     Logger::get()->add_handler<ThreadConsoleHandler>();
     Logger::get()->add_handler<ThreadFileHandler>("/tmp/", "bulk", 2);
     StateMachine state(bulk_size);
-    while (true) {
-        std::string tmp;
-        std::cin >> tmp;
-        state.push_command(tmp);
+    for (std::string line; std::getline(std::cin, line);) {
+        state.push_command(line);
     }
+    Logger::get()->stop();
+    std::cout << state.stat() << std::endl;
+    for (auto& stat: Logger::get()->stat()) {
+        std::cout << stat << std::endl;
+    }
+    delete Logger::get();
     return 0;
 }

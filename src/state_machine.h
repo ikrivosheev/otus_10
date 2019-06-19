@@ -8,6 +8,7 @@
 #include <sstream>
 #include "record.h"
 #include "logger.h"
+#include "statistic.h"
 
 
 enum class STATE {
@@ -23,6 +24,7 @@ class StateMachine {
         ~StateMachine() = default;
         
         STATE current_state();
+        const MainThread& stat() const;
         void push_command(const std::string& command);
         void execute(RecordType);
     
@@ -33,6 +35,7 @@ class StateMachine {
         std::time_t _time = 0;
         std::stack<char> _stack;
         std::vector<std::string> _commands;
+        MainThread _stat;
 };
 
 #endif // STATE_MACHINE_H

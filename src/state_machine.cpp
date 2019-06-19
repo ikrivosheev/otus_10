@@ -9,7 +9,12 @@ STATE StateMachine::current_state() {
     return _cstate;
 }
 
+const MainThread& StateMachine::stat() const {
+    return _stat;
+}
+
 void StateMachine::push_command(const std::string& command) {
+    ++_stat.lines;
     switch(_cstate) {
         case STATE::COMMAND:
             if (command == "{") {
@@ -18,6 +23,7 @@ void StateMachine::push_command(const std::string& command) {
                 _cstate = STATE::BLOCK;
             }
             else {
+                ++_stat.commands;
                 _commands.push_back(command);
                 if (_commands.size() == 1) {
                     time(&_time);
@@ -35,11 +41,13 @@ void StateMachine::push_command(const std::string& command) {
             else if (command == "}") {
                 _stack.pop();
                 if (_stack.empty()) {
+                    ++_stat.blocks;
                     execute(RecordType::BLOCK);
                     _cstate = STATE::COMMAND;
                 }
             }
             else {
+                ++_stat.commands;
                 _commands.push_back(command);
             }
             break;
@@ -48,14 +56,7 @@ void StateMachine::push_command(const std::string& command) {
 
 void StateMachine::execute(RecordType type) {
     if (!_commands.size()) return;
-    std::stringstream ss;
-    ss << "bulk: ";
-    for (auto it = _commands.cbegin(); it != _commands.cend(); ++it) {
-        if ( it != _commands.cbegin()) {
-            ss << ", ";
-        }
-        ss  << (*it);
-    }
-    Logger::get()->log(type, ss.str(), _time);
+    Logger::get()->log(type, _commands, _time);
     _commands.clear();
 }
+

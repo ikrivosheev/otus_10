@@ -6,6 +6,7 @@
 #include <type_traits>
 #include "handler.h"
 #include "record.h"
+#include "statistic.h"
 
 
 class Logger {
@@ -17,8 +18,11 @@ class Logger {
             return (*this);
         }
         void log(const Record&);
-        void log(RecordType, const std::string&);
-        void log(RecordType, const std::string&, const std::time_t&);
+        void log(RecordType, const std::vector<std::string>&);
+        void log(RecordType, const std::vector<std::string>&, const std::time_t&);
+        void stop();
+
+        std::vector<WorkerThread> stat() const;
 
         ~Logger() = default; 
 
